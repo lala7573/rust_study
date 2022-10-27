@@ -1,3 +1,40 @@
+---
+uuid: 202210151753
+tags: rust
+link: https://rustwiki.org/en/book/ch09-00-error-handling.html
+aliases: 
+  - 10_error_handling 
+---
+
+# 10_error_handling
+## unrecoverable error
+- 어떤 종류의 버그가 발견되었고 프로그래머가 이 에러를 어떻게 처리할지가 명확하지 않을 때
+  - e.g. 배열의 끝을 넘어선 위치의 값에 접근하려고 시도하는 경우
+- `panic!`
+  -  매크로 실행 시
+    1. 실패 메세지를 출력하고
+    2. 스택 unwinding (되감기) & 제이터 제거
+      - unwinding 시 각 함수로부터 스택을 거꾸로 훑어가면서 데이터를 제거하는데, 대신 abort 할 수 있음
+        ```
+        [profile.release]
+        panic = 'abort'
+        ```
+    4. 종료
+- `panic!` backtrace 사용하기
+  ```
+  // RUST_BACKTRACE=1 cargo run
+  fn main() {
+      let v = vec![1, 2, 3];
+      v[99];
+  }
+  ```
+  - `cargo build` 혹은 `cargo run`을 `--release` 플래그 없이 사용하는 경우 debug symbol이 기본적으로 켜짐
+
+## recoverable error
+- 복구 가능한 에러는 사용자에게 문제를 보고하고 연산을 재시도하는 것이 보통 합리적인 경우 
+  - e.g. 파일을 찾지 못하는 에러
+- `Result<T, E>` 
+
 ```
 use std::fs::File;
 use std::io::ErrorKind;
